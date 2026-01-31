@@ -36,13 +36,6 @@
                 <button onclick="switchTab('daily-sentence')" class="nav-item sub-item" id="btn-daily-sentence">
                     <i class="fas fa-quote-left"></i> Sentences
                 </button>
-
-                <div class="nav-group">Management</div>
-                <button onclick="exportData()" class="nav-item"><i class="fas fa-file-export"></i> Backup Library</button>
-                <label for="importFile" class="nav-item" style="cursor:pointer">
-                    <i class="fas fa-file-import"></i> Load Data
-                    <input type="file" id="importFile" style="display:none" onchange="importData(event)">
-                </label>
             </nav>
 
             <div class="sidebar-extra">
@@ -58,6 +51,11 @@
                     <h4><i class="fas fa-film"></i> Movie Suggestion</h4>
                     <p id="daily-movie">Loading...</p>
                 </div>
+                
+                <div class="last-updated">
+                    <i class="fas fa-history"></i> Last updated: <span id="last-update-date">Jan 31, 2026</span>
+                </div>
+
                 <button id="theme-toggle" onclick="toggleTheme()">
                     <i class="fas fa-moon"></i> Dark Mode
                 </button>
@@ -68,26 +66,10 @@
             <header class="top-bar">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" onkeyup="searchItems()" placeholder="Search in Synapse network...">
+                    <input type="text" id="searchInput" onkeyup="searchItems()" placeholder="Search in Abdullah's network...">
                 </div>
-                <div class="user-badge">Neural Network for Engineers</div>
+                <div class="user-badge">Curated by Abdullah Köksal</div>
             </header>
-
-            <section class="form-section">
-                <div class="input-grid">
-                    <input type="text" id="textInput" placeholder="Term or Sentence">
-                    <input type="text" id="meaningInput" placeholder="Meaning">
-                    <select id="categoryInput">
-                        <option value="technical">Technical</option>
-                        <option value="daily">Daily</option>
-                    </select>
-                    <select id="typeInput">
-                        <option value="word">Word</option>
-                        <option value="sentence">Sentence</option>
-                    </select>
-                    <button onclick="addItem()" class="add-btn">Add to Network</button>
-                </div>
-            </section>
 
             <div class="content-grid" id="contentGrid"></div>
         </main>
