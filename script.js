@@ -7,12 +7,37 @@ const synapseDatabase = [
     { id: 2, text: "Density", meaning: "Yoğunluk", category: "technical", type: "word" },
     { id: 3, text: "Hardness", meaning: "Sertlik", category: "technical", type: "word" },
     { id: 4, text: "Infrastructure", meaning: "Altyapı", category: "technical", type: "word" },
-    { id: 5, text: "Circular Polarization", meaning: "Dairesel Polarizasyon (Crucial for antenna design)", category: "technical", type: "word" },
-    { id: 6, text: "Impedance Matching", meaning: "Maximum power transfer through impedance alignment.", category: "technical", type: "word" },
+    { id: 5, text: "Circular Polarization", meaning: "Dairesel Polarizasyon", category: "technical", type: "word" },
+    { id: 6, text: "Impedance Matching", meaning: "Empedans Uyumu", category: "technical", type: "word" },
     { id: 7, text: "The system utilizes RTK for centimeter-level accuracy.", meaning: "Sistem, santimetre seviyesinde doğruluk için RTK kullanır.", category: "technical", type: "sentence" },
     { id: 8, text: "Collaborate", meaning: "İş birliği yapmak", category: "daily", type: "word" },
     { id: 9, text: "Deadline", meaning: "Son teslim tarihi", category: "daily", type: "word" },
-    { id: 10, text: "I am highly motivated to work on autonomous systems.", meaning: "Otonom sistemler üzerinde çalışmak için oldukça motivasyonluyum.", category: "daily", type: "sentence" }
+    { id: 10, text: "I am highly motivated to work on autonomous systems.", meaning: "Otonom sistemler üzerinde çalışmak için oldukça motivasyonluyum.", category: "daily", type: "sentence" },
+    { id: 11, text: "Versatile", meaning: "Çok yönlü (Hem araçlar hem insanlar için kullanılır)", category: "daily", type: "word" },
+    { id: 12, text: "Feasible", meaning: "Yapılabilir / Uygulanabilir ", category: "daily", type: "word" },
+    { id: 13, text: "Ambiguous", meaning: "Belirsiz", category: "daily", type: "word" },
+    { id: 14, text: "Prioritize", meaning: "Önceliklendirmek", category: "daily", type: "word" },
+    { id: 15, text: "Reliability", meaning: "Güvenilirlik", category: "daily", type: "word" },
+    { id: 16, text: "Obstacle", meaning: "Engel / Mani", category: "daily", type: "word" },
+    { id: 17, text: "Innovation", meaning: "Yenilikçilik / İnovasyon", category: "daily", type: "word" },
+    { id: 18, text: "Enhance", meaning: "Geliştirmek / Kalitesini artırmak", category: "daily", type: "word" },
+    { id: 19, text: "Implement", meaning: "Uygulamaya koymak / Yürütmek", category: "daily", type: "word" },
+    { id: 20, text: "Precise", meaning: "Kesin", category: "daily", type: "word" },
+    { id: 21, text: "Mitigate", meaning: "Hafifletmek / Etkisini azaltmak (Risk veya gürültü için)", category: "daily", type: "word" },
+    { id: 22, text: "foresighted", meaning: "Öngörülü", category: "daily", type: "word" },
+    { id: 23, text: "Sustainable", meaning: "Sürdürülebilir", category: "daily", type: "word" },
+    { id: 24, text: "Context", meaning: "Bağlam", category: "daily", type: "word" },
+    { id: 25, text: "Criteria", meaning: "Kriterler / Ölçütler", category: "daily", type: "word" },
+    { id: 26, text: "Allocate", meaning: "Tahsis etmek", category: "daily", type: "word" },
+    { id: 27, text: "Insight", meaning: "İçgörü", category: "daily", type: "word" },
+    { id: 28, text: "Efficient", meaning: "Verimli", category: "daily", type: "word" },
+    { id: 29, text: "Integrate", meaning: "Entegre etmek / Birleştirmek", category: "daily", type: "word" },
+    { id: 30, text: "Consistency", meaning: "Tutarlılık / İstikrar", category: "daily", type: "word" }
+
+
+
+
+
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
