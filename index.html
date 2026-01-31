@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synapse | Engineering the Language</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="light-theme">
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-project-diagram"></i>
+                <span>Synapse</span>
+            </div>
+            
+            <nav>
+                <button onclick="switchTab('all')" class="nav-item active" id="btn-all">
+                    <i class="fas fa-network-wired"></i> Global Kütüphane
+                </button>
+                <div class="nav-group">Kategoriler</div>
+                <button onclick="switchTab('technical')" class="nav-item" id="btn-technical">
+                    <i class="fas fa-microchip"></i> Teknik Terimler
+                </button>
+                <button onclick="switchTab('daily')" class="nav-item" id="btn-daily">
+                    <i class="fas fa-comment-dots"></i> Günlük Kalıplar
+                </button>
+                <div class="nav-group">Araçlar</div>
+                <button onclick="exportData()" class="nav-item"><i class="fas fa-file-export"></i> Sözlüğü Yedekle</button>
+                <label for="importFile" class="nav-item" style="cursor:pointer">
+                    <i class="fas fa-file-import"></i> Veri Yükle
+                    <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+                </label>
+            </nav>
+
+            <div class="sidebar-extra">
+                <button id="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i> Karanlık Mod
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" onkeyup="searchItems()" placeholder="Synapse ağında ara...">
+                </div>
+                <div class="user-badge">Neural Network for Engineers</div>
+            </header>
+
+            <section class="form-section">
+                <div class="input-grid">
+                    <input type="text" id="textInput" placeholder="Terim veya Cümle">
+                    <input type="text" id="meaningInput" placeholder="Anlamı">
+                    <select id="categoryInput">
+                        <option value="technical">Teknik</option>
+                        <option value="daily">Günlük</option>
+                    </select>
+                    <select id="typeInput">
+                        <option value="word">Kelime</option>
+                        <option value="sentence">Cümle</option>
+                    </select>
+                    <button onclick="addItem()" class="add-btn">Ağa Ekle</button>
+                </div>
+            </section>
+
+            <div class="content-grid" id="contentGrid"></div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
