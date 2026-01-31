@@ -27,8 +27,8 @@
                 <button onclick="switchTab('daily')" class="nav-item" id="btn-daily">
                     <i class="fas fa-comment-dots"></i> Günlük Kalıplar
                 </button>
-                <div class="nav-group">Araçlar</div>
-                <button onclick="exportData()" class="nav-item"><i class="fas fa-file-export"></i> Sözlüğü Yedekle</button>
+                <div class="nav-group">Yönetim</div>
+                <button onclick="exportData()" class="nav-item"><i class="fas fa-file-export"></i> Yedekle (.json)</button>
                 <label for="importFile" class="nav-item" style="cursor:pointer">
                     <i class="fas fa-file-import"></i> Veri Yükle
                     <input type="file" id="importFile" style="display:none" onchange="importData(event)">
@@ -36,6 +36,21 @@
             </nav>
 
             <div class="sidebar-extra">
+                <div class="info-card date-card">
+                    <h4 id="current-date">-- --- ----</h4>
+                    <p id="current-time">00:00</p>
+                </div>
+
+                <div class="info-card fun-card">
+                    <h4><i class="fas fa-headphones"></i> Günün Müziği</h4>
+                    <p id="daily-music">Yükleniyor...</p>
+                </div>
+
+                <div class="info-card fun-card">
+                    <h4><i class="fas fa-film"></i> Film Tavsiyesi</h4>
+                    <p id="daily-movie">Yükleniyor...</p>
+                </div>
+
                 <button id="theme-toggle" onclick="toggleTheme()">
                     <i class="fas fa-moon"></i> Karanlık Mod
                 </button>
