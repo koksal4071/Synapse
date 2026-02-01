@@ -713,4 +713,23 @@ window.onscroll = function() {
 
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+// Sayfa kaydırıldığında butonun görünürlüğünü kontrol et
+window.onscroll = function() {
+    const btn = document.getElementById("backToTop");
+    // Kullanıcı 300 piksel aşağı indiğinde butonu göster
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        btn.style.display = "block";
+    } else {
+        btn.style.display = "none";
+    }
+};
+
+// Sayfayı en üste kaydıran fonksiyon
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Pürüzsüz yukarı çıkış animasyonu
+    });
+    }
 }

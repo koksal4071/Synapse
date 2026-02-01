@@ -76,4 +76,26 @@ body, html {
     .main-content { padding: 80px 15px 15px 15px; }
     .top-bar { flex-direction: column-reverse; gap: 10px; }
     .search-box { width: 100%; }
+
+#backToTop {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--primary); /* Sitenin ana rengiyle uyumlu */
+    color: #0f172a;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none; /* Başlangıçta gizli tutuyoruz */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 1000;
+    transition: 0.3s;
+}
+
+#backToTop:hover {
+    transform: translateY(-5px); /* Üzerine gelince yukarı zıplama efekti */
+    background: #ffffff;
+}
 }
