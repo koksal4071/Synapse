@@ -1,7 +1,6 @@
 let currentTab = 'all';
 
-// --- ABDULLAH KÖKSAL'S MASTER DATABASE ---
-// To add new words: Just add a new object to this array!
+// --- ABDULLAH KÖKSAL'S MASTER DATABASE (500+ Entries) ---
 const synapseDatabase = [
     { id: 1, text: "Britleness", meaning: "Kırılganlık", category: "technical", type: "word" },
     { id: 2, text: "Density", meaning: "Yoğunluk", category: "technical", type: "word" },
@@ -504,8 +503,6 @@ const synapseDatabase = [
     { id: 499, text: "The analysis highlights critical design factors.", meaning: "Analiz kritik tasarım faktörlerini vurgular.", category: "technical", type: "sentence" },
     { id: 500, text: "The results demonstrate successful system implementation.", meaning: "Sonuçlar başarılı sistem uygulamasını göstermektedir.", category: "technical", type: "sentence" }
 
-
-
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -575,7 +572,6 @@ function setFunRecommendations() {
   "Two Steps From Hell - Heart of Courage",
   "Audiomachine - Blood and Stone"
 ];
-
 const movies = [
   "Interstellar",
   "Inception",
@@ -633,20 +629,28 @@ const movies = [
     document.getElementById('daily-movie').innerText = movies[Math.floor(Math.random() * movies.length)];
 }
 
+function updateStats() {
+    const total = synapseDatabase.length;
+    const techCount = synapseDatabase.filter(i => i.category === 'technical').length;
+    const dailyCount = synapseDatabase.filter(i => i.category === 'daily').length;
+
+    document.getElementById('stats-total').innerText = `Total: ${total}`;
+    document.getElementById('stats-tech').innerText = `Tech: ${techCount}`;
+    document.getElementById('stats-daily').innerText = `Daily: ${dailyCount}`;
+}
+
 function refreshUI() {
     const grid = document.getElementById('contentGrid');
     grid.innerHTML = '';
     
     let items = synapseDatabase;
 
-    let filtered = items;
-    // Filtering Logic for specific sidebar buttons
-    if (currentTab === 'tech-word') filtered = items.filter(i => i.category === 'technical' && i.type === 'word');
-    else if (currentTab === 'tech-sentence') filtered = items.filter(i => i.category === 'technical' && i.type === 'sentence');
-    else if (currentTab === 'daily-word') filtered = items.filter(i => i.category === 'daily' && i.type === 'word');
-    else if (currentTab === 'daily-sentence') filtered = items.filter(i => i.category === 'daily' && i.type === 'sentence');
+    if (currentTab === 'tech-word') items = synapseDatabase.filter(i => i.category === 'technical' && i.type === 'word');
+    else if (currentTab === 'tech-sentence') items = synapseDatabase.filter(i => i.category === 'technical' && i.type === 'sentence');
+    else if (currentTab === 'daily-word') items = synapseDatabase.filter(i => i.category === 'daily' && i.type === 'word');
+    else if (currentTab === 'daily-sentence') items = synapseDatabase.filter(i => i.category === 'daily' && i.type === 'sentence');
 
-    filtered.forEach(item => {
+    items.forEach(item => {
         const card = document.createElement('div');
         card.className = `item-card ${item.category}`;
         card.innerHTML = `
@@ -656,6 +660,8 @@ function refreshUI() {
         `;
         grid.appendChild(card);
     });
+
+    updateStats();
 }
 
 function switchTab(tab) {
@@ -677,4 +683,18 @@ function toggleTheme() {
     const isDark = document.body.classList.contains('dark-theme');
     localStorage.setItem('synapse-theme', isDark ? 'dark' : 'light');
     document.getElementById('theme-toggle').innerHTML = isDark ? '<i class="fas fa-sun"></i> Light Mode' : '<i class="fas fa-moon"></i> Dark Mode';
+}
+
+// Scroll Handling for Back to Top
+window.onscroll = function() {
+    const btn = document.getElementById("backToTop");
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        btn.style.display = "block";
+    } else {
+        btn.style.display = "none";
+    }
+};
+
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
