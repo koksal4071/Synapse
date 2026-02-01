@@ -1,6 +1,6 @@
 let currentTab = 'all';
 
-// --- ABDULLAH KÖKSAL'S MASTER DATABASE (500+ Entries) ---
+// --- ABDULLAH KÖKSAL'S MASTER DATABASE ---
 const synapseDatabase = [
     { id: 1, text: "Britleness", meaning: "Kırılganlık", category: "technical", type: "word" },
     { id: 2, text: "Density", meaning: "Yoğunluk", category: "technical", type: "word" },
@@ -502,7 +502,6 @@ const synapseDatabase = [
     { id: 498, text: "The system was optimized based on test results.", meaning: "Sistem test sonuçlarına göre optimize edildi.", category: "technical", type: "sentence" },
     { id: 499, text: "The analysis highlights critical design factors.", meaning: "Analiz kritik tasarım faktörlerini vurgular.", category: "technical", type: "sentence" },
     { id: 500, text: "The results demonstrate successful system implementation.", meaning: "Sonuçlar başarılı sistem uygulamasını göstermektedir.", category: "technical", type: "sentence" }
-
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -572,6 +571,7 @@ function setFunRecommendations() {
   "Two Steps From Hell - Heart of Courage",
   "Audiomachine - Blood and Stone"
 ];
+
 const movies = [
   "Interstellar",
   "Inception",
@@ -625,6 +625,7 @@ const movies = [
   "A.I. Artificial Intelligence"
 ];
 
+    
     document.getElementById('daily-music').innerText = musics[Math.floor(Math.random() * musics.length)];
     document.getElementById('daily-movie').innerText = movies[Math.floor(Math.random() * movies.length)];
 }
@@ -634,7 +635,7 @@ function updateStats() {
     const techCount = synapseDatabase.filter(i => i.category === 'technical').length;
     const dailyCount = synapseDatabase.filter(i => i.category === 'daily').length;
 
-    document.getElementById('stats-total').innerText = `Total: ${total}`;
+    document.getElementById('stats-total').innerText = `Total Entries: ${total}`;
     document.getElementById('stats-tech').innerText = `Tech: ${techCount}`;
     document.getElementById('stats-daily').innerText = `Daily: ${dailyCount}`;
 }
@@ -685,7 +686,7 @@ function toggleTheme() {
     document.getElementById('theme-toggle').innerHTML = isDark ? '<i class="fas fa-sun"></i> Light Mode' : '<i class="fas fa-moon"></i> Dark Mode';
 }
 
-// Scroll Handling for Back to Top
+// Global Scroll Listener
 window.onscroll = function() {
     const btn = document.getElementById("backToTop");
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
