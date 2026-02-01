@@ -502,7 +502,6 @@ const synapseDatabase = [
     { id: 498, text: "The system was optimized based on test results.", meaning: "Sistem test sonuçlarına göre optimize edildi.", category: "technical", type: "sentence" },
     { id: 499, text: "The analysis highlights critical design factors.", meaning: "Analiz kritik tasarım faktörlerini vurgular.", category: "technical", type: "sentence" },
     { id: 500, text: "The results demonstrate successful system implementation.", meaning: "Sonuçlar başarılı sistem uygulamasını göstermektedir.", category: "technical", type: "sentence" }
-
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -680,7 +679,6 @@ function switchTab(tab) {
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.getElementById(`btn-${tab}`).classList.add('active');
     
-    // Mobilde kategori seçince menüyü otomatik kapat
     const sidebar = document.getElementById('sidebar');
     if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
         toggleSidebar();
@@ -702,6 +700,7 @@ function toggleTheme() {
     document.getElementById('theme-toggle').innerHTML = isDark ? '<i class="fas fa-sun"></i> Light Mode' : '<i class="fas fa-moon"></i> Dark Mode';
 }
 
+// SCROLL HANDLING (Back to Top)
 window.onscroll = function() {
     const btn = document.getElementById("backToTop");
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
@@ -713,23 +712,4 @@ window.onscroll = function() {
 
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-// Sayfa kaydırıldığında butonun görünürlüğünü kontrol et
-window.onscroll = function() {
-    const btn = document.getElementById("backToTop");
-    // Kullanıcı 300 piksel aşağı indiğinde butonu göster
-    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-        btn.style.display = "block";
-    } else {
-        btn.style.display = "none";
-    }
-};
-
-// Sayfayı en üste kaydıran fonksiyon
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth' // Pürüzsüz yukarı çıkış animasyonu
-    });
-    }
 }
