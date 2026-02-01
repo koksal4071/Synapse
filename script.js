@@ -502,6 +502,7 @@ const synapseDatabase = [
     { id: 498, text: "The system was optimized based on test results.", meaning: "Sistem test sonuçlarına göre optimize edildi.", category: "technical", type: "sentence" },
     { id: 499, text: "The analysis highlights critical design factors.", meaning: "Analiz kritik tasarım faktörlerini vurgular.", category: "technical", type: "sentence" },
     { id: 500, text: "The results demonstrate successful system implementation.", meaning: "Sonuçlar başarılı sistem uygulamasını göstermektedir.", category: "technical", type: "sentence" }
+
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -512,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateDateTime, 60000);
 });
 
-// Sidebar Toggle for Mobile
+// MOBİL MENÜ KONTROLÜ
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const icon = document.querySelector('.mobile-menu-btn i');
@@ -679,9 +680,11 @@ function switchTab(tab) {
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.getElementById(`btn-${tab}`).classList.add('active');
     
-    // Auto-close sidebar on mobile after selecting a category
-    if(window.innerWidth <= 768) toggleSidebar();
-    
+    // Mobilde kategori seçince menüyü otomatik kapat
+    const sidebar = document.getElementById('sidebar');
+    if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+        toggleSidebar();
+    }
     refreshUI();
 }
 
