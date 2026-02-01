@@ -1,11 +1,11 @@
 let currentTab = 'all';
 
-// --- ABDULLAH KÖKSAL'S MASTER DATABASE ---
-// Buraya mevcut 501 kelime ve cümleni eklemeye devam edebilirsin.
+// --- MASTER DATABASE ---
+// Abdullah Köksal'ın 501+ içerikli kütüphanesi
 const synapseDatabase = [
     { id: 1, text: "Britleness", meaning: "Kırılganlık", category: "technical", type: "word" },
     { id: 2, text: "Density", meaning: "Yoğunluk", category: "technical", type: "word" },
-        { id: 3, text: "Hardness", meaning: "Sertlik", category: "technical", type: "word" },
+    { id: 3, text: "Hardness", meaning: "Sertlik", category: "technical", type: "word" },
     { id: 4, text: "Infrastructure", meaning: "Altyapı", category: "technical", type: "word" },
     { id: 5, text: "Circular Polarization", meaning: "Dairesel Polarizasyon", category: "technical", type: "word" },
     { id: 6, text: "Impedance Matching", meaning: "Empedans Uyumu", category: "technical", type: "word" },
@@ -503,25 +503,44 @@ const synapseDatabase = [
     { id: 498, text: "The system was optimized based on test results.", meaning: "Sistem test sonuçlarına göre optimize edildi.", category: "technical", type: "sentence" },
     { id: 499, text: "The analysis highlights critical design factors.", meaning: "Analiz kritik tasarım faktörlerini vurgular.", category: "technical", type: "sentence" },
     { id: 500, text: "The results demonstrate successful system implementation.", meaning: "Sonuçlar başarılı sistem uygulamasını göstermektedir.", category: "technical", type: "sentence" }
+
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Tema kontrolü
-    if(localStorage.getItem('synapse-theme') === 'dark') toggleTheme();
+    // Kayıtlı temayı yükle
+    if(localStorage.getItem('synapse-theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+        updateThemeButton(true);
+    }
     
-    // Başlangıç fonksiyonları
     refreshUI();
     updateDateTime();
     setFunRecommendations();
     
-    // Saati her dakika güncelle
+    // Zamanı her dakika güncelle
     setInterval(updateDateTime, 60000);
 });
 
-// --- SCROLL HANDLING (YUKARI ÇIK BUTONU KONTROLÜ) ---
+// --- THEME CONTROL (Dark/Light Mode) ---
+function toggleTheme() {
+    document.body.classList.toggle('dark-theme');
+    const isDark = document.body.classList.contains('dark-theme');
+    localStorage.setItem('synapse-theme', isDark ? 'dark' : 'light');
+    updateThemeButton(isDark);
+}
+
+function updateThemeButton(isDark) {
+    const btn = document.getElementById('theme-toggle');
+    if (btn) {
+        btn.innerHTML = isDark ? 
+            '<i class="fas fa-sun"></i> <span>Light Mode</span>' : 
+            '<i class="fas fa-moon"></i> <span>Dark Mode</span>';
+    }
+}
+
+// --- SCROLL HANDLING (Back to Top) ---
 window.onscroll = function() {
     const btn = document.getElementById("backToTop");
-    // Sayfa 300 piksel aşağı indiğinde butonu göster
     if (window.scrollY > 300) {
         btn.style.display = "block";
     } else {
@@ -529,44 +548,37 @@ window.onscroll = function() {
     }
 };
 
-// Pürüzsüz yukarı çıkış fonksiyonu
 function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// --- MOBİL SIDEBAR KONTROLÜ ---
+// --- MOBILE SIDEBAR CONTROL ---
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    const menuBtnIcon = document.querySelector('.mobile-menu-btn i');
-    
-    sidebar.classList.toggle('active');
-    
-    if (sidebar.classList.contains('active')) {
-        menuBtnIcon.className = 'fas fa-times';
-    } else {
-        menuBtnIcon.className = 'fas fa-bars';
-    }
+    if (sidebar) sidebar.classList.toggle('active');
 }
 
-// --- İSTATİSTİK GÜNCELLEME ---
+// --- STATISTICS ---
 function updateStats() {
     const total = synapseDatabase.length;
     const techCount = synapseDatabase.filter(i => i.category === 'technical').length;
     const dailyCount = synapseDatabase.filter(i => i.category === 'daily').length;
 
-    document.getElementById('stats-total').innerText = `Total Entries: ${total}`;
-    document.getElementById('stats-tech').innerText = `Tech: ${techCount}`;
-    document.getElementById('stats-daily').innerText = `Daily: ${dailyCount}`;
+    const totalEl = document.getElementById('stats-total');
+    const techEl = document.getElementById('stats-tech');
+    const dailyEl = document.getElementById('stats-daily');
+
+    if (totalEl) totalEl.innerText = `Total Entries: ${total}`;
+    if (techEl) techEl.innerText = `Tech: ${techCount}`;
+    if (dailyEl) dailyEl.innerText = `Daily: ${dailyCount}`;
 }
 
-// --- ARAYÜZÜ YENİLEME ---
+// --- CORE UI FUNCTIONS ---
 function refreshUI() {
     const grid = document.getElementById('contentGrid');
-    grid.innerHTML = '';
+    if (!grid) return;
     
+    grid.innerHTML = '';
     let filtered = synapseDatabase;
 
     if (currentTab === 'tech-word') filtered = synapseDatabase.filter(i => i.category === 'technical' && i.type === 'word');
@@ -588,22 +600,18 @@ function refreshUI() {
     updateStats();
 }
 
-// --- SEKME DEĞİŞTİRME ---
 function switchTab(tab) {
     currentTab = tab;
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    document.getElementById(`btn-${tab}`).classList.add('active');
+    const activeBtn = document.getElementById(`btn-${tab}`);
+    if (activeBtn) activeBtn.classList.add('active');
     
     // Mobilde kategori seçince menüyü kapat
-    const sidebar = document.getElementById('sidebar');
-    if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
-        toggleSidebar();
-    }
+    if(window.innerWidth <= 768) toggleSidebar();
     
     refreshUI();
 }
 
-// --- ARAMA FONKSİYONU ---
 function searchItems() {
     const q = document.getElementById('searchInput').value.toLowerCase();
     document.querySelectorAll('.item-card').forEach(c => {
@@ -611,15 +619,16 @@ function searchItems() {
     });
 }
 
-// --- SAAT VE TARİH ---
+// --- SIDEBAR EXTRAS ---
 function updateDateTime() {
     const now = new Date();
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
-    document.getElementById('current-date').innerText = now.toLocaleDateString('en-US', options);
-    document.getElementById('current-time').innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    const dateEl = document.getElementById('current-date');
+    const timeEl = document.getElementById('current-time');
+    
+    if (dateEl) dateEl.innerText = now.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+    if (timeEl) timeEl.innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
-// --- ÖNERİLER ---
 function setFunRecommendations() {
     const musics = [
   "Interstellar Main Theme",
@@ -726,13 +735,10 @@ const movies = [
   "A.I. Artificial Intelligence"
 ];
 
-    document.getElementById('daily-music').innerText = musics[Math.floor(Math.random() * musics.length)];
-    document.getElementById('daily-movie').innerText = movies[Math.floor(Math.random() * movies.length)];
-}
-
-// --- TEMA DEĞİŞTİRME ---
-function toggleTheme() {
-    document.body.classList.toggle('dark-theme');
-    const isDark = document.body.classList.contains('dark-theme');
-    localStorage.setItem('synapse-theme', isDark ? 'dark' : 'light');
+    
+    const musicEl = document.getElementById('daily-music');
+    const movieEl = document.getElementById('daily-movie');
+    
+    if (musicEl) musicEl.innerText = musics[Math.floor(Math.random() * musics.length)];
+    if (movieEl) movieEl.innerText = movies[Math.floor(Math.random() * movies.length)];
 }
