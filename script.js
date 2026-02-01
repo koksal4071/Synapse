@@ -512,6 +512,19 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateDateTime, 60000);
 });
 
+// Sidebar Toggle for Mobile
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const icon = document.querySelector('.mobile-menu-btn i');
+    sidebar.classList.toggle('active');
+    
+    if (sidebar.classList.contains('active')) {
+        icon.className = 'fas fa-times';
+    } else {
+        icon.className = 'fas fa-bars';
+    }
+}
+
 function updateDateTime() {
     const now = new Date();
     const options = { day: 'numeric', month: 'long', year: 'numeric' };
@@ -520,7 +533,7 @@ function updateDateTime() {
 }
 
 function setFunRecommendations() {
-    const musics = [
+     const musics = [
   "Interstellar Main Theme",
   "Hans Zimmer - Time",
   "Hans Zimmer - Cornfield Chase",
@@ -625,7 +638,6 @@ const movies = [
   "A.I. Artificial Intelligence"
 ];
 
-    
     document.getElementById('daily-music').innerText = musics[Math.floor(Math.random() * musics.length)];
     document.getElementById('daily-movie').innerText = movies[Math.floor(Math.random() * movies.length)];
 }
@@ -634,7 +646,6 @@ function updateStats() {
     const total = synapseDatabase.length;
     const techCount = synapseDatabase.filter(i => i.category === 'technical').length;
     const dailyCount = synapseDatabase.filter(i => i.category === 'daily').length;
-
     document.getElementById('stats-total').innerText = `Total Entries: ${total}`;
     document.getElementById('stats-tech').innerText = `Tech: ${techCount}`;
     document.getElementById('stats-daily').innerText = `Daily: ${dailyCount}`;
@@ -645,11 +656,10 @@ function refreshUI() {
     grid.innerHTML = '';
     
     let items = synapseDatabase;
-
-    if (currentTab === 'tech-word') items = synapseDatabase.filter(i => i.category === 'technical' && i.type === 'word');
-    else if (currentTab === 'tech-sentence') items = synapseDatabase.filter(i => i.category === 'technical' && i.type === 'sentence');
-    else if (currentTab === 'daily-word') items = synapseDatabase.filter(i => i.category === 'daily' && i.type === 'word');
-    else if (currentTab === 'daily-sentence') items = synapseDatabase.filter(i => i.category === 'daily' && i.type === 'sentence');
+    if (currentTab === 'tech-word') items = items.filter(i => i.category === 'technical' && i.type === 'word');
+    else if (currentTab === 'tech-sentence') items = items.filter(i => i.category === 'technical' && i.type === 'sentence');
+    else if (currentTab === 'daily-word') items = items.filter(i => i.category === 'daily' && i.type === 'word');
+    else if (currentTab === 'daily-sentence') items = items.filter(i => i.category === 'daily' && i.type === 'sentence');
 
     items.forEach(item => {
         const card = document.createElement('div');
@@ -661,7 +671,6 @@ function refreshUI() {
         `;
         grid.appendChild(card);
     });
-
     updateStats();
 }
 
@@ -669,6 +678,10 @@ function switchTab(tab) {
     currentTab = tab;
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.getElementById(`btn-${tab}`).classList.add('active');
+    
+    // Auto-close sidebar on mobile after selecting a category
+    if(window.innerWidth <= 768) toggleSidebar();
+    
     refreshUI();
 }
 
@@ -686,7 +699,6 @@ function toggleTheme() {
     document.getElementById('theme-toggle').innerHTML = isDark ? '<i class="fas fa-sun"></i> Light Mode' : '<i class="fas fa-moon"></i> Dark Mode';
 }
 
-// Global Scroll Listener
 window.onscroll = function() {
     const btn = document.getElementById("backToTop");
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {

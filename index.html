@@ -9,8 +9,12 @@
 </head>
 <body class="light-theme">
 
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
     <div class="app-container">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="logo">
                 <i class="fas fa-project-diagram"></i>
                 <span>Synapse</span>
@@ -63,7 +67,7 @@
                 </div>
 
                 <div class="last-updated">
-                    <i class="fas fa-history"></i> Last updated: <span id="last-update-date">Feb 01, 2026</span>
+                    <i class="fas fa-history"></i> Last updated: <span id="last-update-date">Feb 01/2026, PM 12:01</span>
                 </div>
 
                 <button id="theme-toggle" onclick="toggleTheme()">
