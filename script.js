@@ -1,10 +1,11 @@
 let currentTab = 'all';
 
 // --- ABDULLAH KÖKSAL'S MASTER DATABASE ---
+// Buraya mevcut 501 kelime ve cümleni eklemeye devam edebilirsin.
 const synapseDatabase = [
     { id: 1, text: "Britleness", meaning: "Kırılganlık", category: "technical", type: "word" },
     { id: 2, text: "Density", meaning: "Yoğunluk", category: "technical", type: "word" },
-    { id: 3, text: "Hardness", meaning: "Sertlik", category: "technical", type: "word" },
+        { id: 3, text: "Hardness", meaning: "Sertlik", category: "technical", type: "word" },
     { id: 4, text: "Infrastructure", meaning: "Altyapı", category: "technical", type: "word" },
     { id: 5, text: "Circular Polarization", meaning: "Dairesel Polarizasyon", category: "technical", type: "word" },
     { id: 6, text: "Impedance Matching", meaning: "Empedans Uyumu", category: "technical", type: "word" },
@@ -505,26 +506,112 @@ const synapseDatabase = [
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Tema kontrolü
     if(localStorage.getItem('synapse-theme') === 'dark') toggleTheme();
+    
+    // Başlangıç fonksiyonları
     refreshUI();
     updateDateTime();
     setFunRecommendations();
+    
+    // Saati her dakika güncelle
     setInterval(updateDateTime, 60000);
 });
 
-// MOBİL MENÜ KONTROLÜ
+// --- SCROLL HANDLING (YUKARI ÇIK BUTONU KONTROLÜ) ---
+window.onscroll = function() {
+    const btn = document.getElementById("backToTop");
+    // Sayfa 300 piksel aşağı indiğinde butonu göster
+    if (window.scrollY > 300) {
+        btn.style.display = "block";
+    } else {
+        btn.style.display = "none";
+    }
+};
+
+// Pürüzsüz yukarı çıkış fonksiyonu
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// --- MOBİL SIDEBAR KONTROLÜ ---
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    const icon = document.querySelector('.mobile-menu-btn i');
+    const menuBtnIcon = document.querySelector('.mobile-menu-btn i');
+    
     sidebar.classList.toggle('active');
     
     if (sidebar.classList.contains('active')) {
-        icon.className = 'fas fa-times';
+        menuBtnIcon.className = 'fas fa-times';
     } else {
-        icon.className = 'fas fa-bars';
+        menuBtnIcon.className = 'fas fa-bars';
     }
 }
 
+// --- İSTATİSTİK GÜNCELLEME ---
+function updateStats() {
+    const total = synapseDatabase.length;
+    const techCount = synapseDatabase.filter(i => i.category === 'technical').length;
+    const dailyCount = synapseDatabase.filter(i => i.category === 'daily').length;
+
+    document.getElementById('stats-total').innerText = `Total Entries: ${total}`;
+    document.getElementById('stats-tech').innerText = `Tech: ${techCount}`;
+    document.getElementById('stats-daily').innerText = `Daily: ${dailyCount}`;
+}
+
+// --- ARAYÜZÜ YENİLEME ---
+function refreshUI() {
+    const grid = document.getElementById('contentGrid');
+    grid.innerHTML = '';
+    
+    let filtered = synapseDatabase;
+
+    if (currentTab === 'tech-word') filtered = synapseDatabase.filter(i => i.category === 'technical' && i.type === 'word');
+    else if (currentTab === 'tech-sentence') filtered = synapseDatabase.filter(i => i.category === 'technical' && i.type === 'sentence');
+    else if (currentTab === 'daily-word') filtered = synapseDatabase.filter(i => i.category === 'daily' && i.type === 'word');
+    else if (currentTab === 'daily-sentence') filtered = synapseDatabase.filter(i => i.category === 'daily' && i.type === 'sentence');
+
+    filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = `item-card ${item.category}`;
+        card.innerHTML = `
+            <small style="font-weight:700; color:var(--primary);">${item.category.toUpperCase()} ${item.type.toUpperCase()}</small>
+            <h3 style="margin: 10px 0;">${item.text}</h3>
+            <p>${item.meaning}</p>
+        `;
+        grid.appendChild(card);
+    });
+
+    updateStats();
+}
+
+// --- SEKME DEĞİŞTİRME ---
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById(`btn-${tab}`).classList.add('active');
+    
+    // Mobilde kategori seçince menüyü kapat
+    const sidebar = document.getElementById('sidebar');
+    if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+        toggleSidebar();
+    }
+    
+    refreshUI();
+}
+
+// --- ARAMA FONKSİYONU ---
+function searchItems() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('.item-card').forEach(c => {
+        c.style.display = c.innerText.toLowerCase().includes(q) ? 'block' : 'none';
+    });
+}
+
+// --- SAAT VE TARİH ---
 function updateDateTime() {
     const now = new Date();
     const options = { day: 'numeric', month: 'long', year: 'numeric' };
@@ -532,8 +619,9 @@ function updateDateTime() {
     document.getElementById('current-time').innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
+// --- ÖNERİLER ---
 function setFunRecommendations() {
-     const musics = [
+    const musics = [
   "Interstellar Main Theme",
   "Hans Zimmer - Time",
   "Hans Zimmer - Cornfield Chase",
@@ -642,74 +730,9 @@ const movies = [
     document.getElementById('daily-movie').innerText = movies[Math.floor(Math.random() * movies.length)];
 }
 
-function updateStats() {
-    const total = synapseDatabase.length;
-    const techCount = synapseDatabase.filter(i => i.category === 'technical').length;
-    const dailyCount = synapseDatabase.filter(i => i.category === 'daily').length;
-    document.getElementById('stats-total').innerText = `Total Entries: ${total}`;
-    document.getElementById('stats-tech').innerText = `Tech: ${techCount}`;
-    document.getElementById('stats-daily').innerText = `Daily: ${dailyCount}`;
-}
-
-function refreshUI() {
-    const grid = document.getElementById('contentGrid');
-    grid.innerHTML = '';
-    
-    let items = synapseDatabase;
-    if (currentTab === 'tech-word') items = items.filter(i => i.category === 'technical' && i.type === 'word');
-    else if (currentTab === 'tech-sentence') items = items.filter(i => i.category === 'technical' && i.type === 'sentence');
-    else if (currentTab === 'daily-word') items = items.filter(i => i.category === 'daily' && i.type === 'word');
-    else if (currentTab === 'daily-sentence') items = items.filter(i => i.category === 'daily' && i.type === 'sentence');
-
-    items.forEach(item => {
-        const card = document.createElement('div');
-        card.className = `item-card ${item.category}`;
-        card.innerHTML = `
-            <small style="font-weight:700; color:var(--primary);">${item.category.toUpperCase()} ${item.type.toUpperCase()}</small>
-            <h3 style="margin: 10px 0;">${item.text}</h3>
-            <p>${item.meaning}</p>
-        `;
-        grid.appendChild(card);
-    });
-    updateStats();
-}
-
-function switchTab(tab) {
-    currentTab = tab;
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    document.getElementById(`btn-${tab}`).classList.add('active');
-    
-    const sidebar = document.getElementById('sidebar');
-    if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
-        toggleSidebar();
-    }
-    refreshUI();
-}
-
-function searchItems() {
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    document.querySelectorAll('.item-card').forEach(c => {
-        c.style.display = c.innerText.toLowerCase().includes(q) ? 'block' : 'none';
-    });
-}
-
+// --- TEMA DEĞİŞTİRME ---
 function toggleTheme() {
     document.body.classList.toggle('dark-theme');
     const isDark = document.body.classList.contains('dark-theme');
     localStorage.setItem('synapse-theme', isDark ? 'dark' : 'light');
-    document.getElementById('theme-toggle').innerHTML = isDark ? '<i class="fas fa-sun"></i> Light Mode' : '<i class="fas fa-moon"></i> Dark Mode';
-}
-
-// SCROLL HANDLING (Back to Top)
-window.onscroll = function() {
-    const btn = document.getElementById("backToTop");
-    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-        btn.style.display = "block";
-    } else {
-        btn.style.display = "none";
-    }
-};
-
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
