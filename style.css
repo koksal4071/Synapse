@@ -25,7 +25,6 @@ body, html {
     background-color: var(--bg-main);
     color: var(--text-color);
     transition: 0.3s;
-    min-height: 100vh;
 }
 
 .app-container {
@@ -33,20 +32,39 @@ body, html {
     min-height: 100vh;
 }
 
-/* --- SIDEBAR DÜZENLEMESİ --- */
+/* --- YAN PANEL (SIDEBAR) TAM DÜZELTME --- */
 .sidebar {
     width: 280px;
     background: var(--bg-sidebar);
     color: white;
-    padding: 25px 20px;
-    display: flex;
-    flex-direction: column;
     position: sticky;
     top: 0;
     height: 100vh;
-    overflow: hidden; /* Dışarı taşmayı engeller */
+    /* Tek bir kaydırma çubuğu için burası kritik */
+    overflow-y: auto; 
+    overflow-x: hidden;
     transition: transform 0.4s ease;
     z-index: 1000;
+}
+
+/* Sidebar İçeriği İçin Kapsayıcı */
+.sidebar-scroll-container {
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+/* İnce ve Şık Kaydırma Çubuğu Tasarımı */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 .logo {
@@ -57,20 +75,7 @@ body, html {
     display: flex;
     align-items: center;
     gap: 10px;
-    flex-shrink: 0;
 }
-
-/* Menü kısmını kaydırılabilir yapıyoruz */
-.sidebar-nav {
-    flex: 1;
-    overflow-y: auto;
-    margin-bottom: 20px;
-    padding-right: 5px;
-}
-
-/* Scrollbar tasarımı (Sidebar için) */
-.sidebar-nav::-webkit-scrollbar { width: 5px; }
-.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
 .nav-group {
     font-size: 0.7rem;
@@ -94,6 +99,7 @@ body, html {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 0.9rem;
 }
 
 .nav-item:hover, .nav-item.active {
@@ -103,19 +109,23 @@ body, html {
 
 .sub-item { padding-left: 30px !important; font-size: 0.85rem !important; }
 
-/* --- SIDEBAR FOOTER (BUTONUN OLDUĞU YER) --- */
-.sidebar-footer {
-    margin-top: auto;
-    flex-shrink: 0;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    padding-top: 15px;
+.sidebar-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 20px 0;
+}
+
+/* Alt Bölüm Kartları */
+.sidebar-extras {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .info-card {
     background: rgba(255, 255, 255, 0.05);
-    padding: 12px;
+    padding: 15px;
     border-radius: 12px;
-    margin-bottom: 10px;
     border-left: 4px solid var(--primary);
     font-size: 0.85rem;
 }
@@ -125,33 +135,32 @@ body, html {
 .fun-card { border-left-color: var(--fun); background: rgba(162, 155, 254, 0.1); }
 
 .last-updated {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     color: #64748b;
     text-align: center;
-    margin-bottom: 10px;
+    margin: 10px 0;
     opacity: 0.8;
 }
 
-/* DARK MODE BUTONU - TAM DÜZELTME */
+/* DARK MODE BUTONU */
 #theme-toggle {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     background: var(--primary);
     color: #0f172a;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    transition: 0.3s;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px; /* En altta biraz boşluk bırakır */
 }
 
-#theme-toggle:hover { filter: brightness(1.1); }
-
-/* --- ANA İÇERİK --- */
+/* --- ANA İÇERİK ALANI --- */
 .main-content {
     flex: 1;
     padding: 40px;
@@ -195,14 +204,13 @@ body, html {
     border-radius: 15px;
     border: 1px solid var(--border);
     border-top: 5px solid #ccc;
-    transition: 0.3s ease;
+    transition: 0.3s;
 }
 
-.item-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
 .item-card.technical { border-top-color: var(--tech); }
 .item-card.daily { border-top-color: var(--daily); }
 
-/* --- MOBİL VE BUTONLAR --- */
+/* --- MOBİL AYARLAR --- */
 .mobile-menu-btn {
     display: none;
     position: fixed;
@@ -229,7 +237,6 @@ body, html {
     cursor: pointer;
     display: none;
     z-index: 1000;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 @media (max-width: 768px) {
@@ -240,10 +247,10 @@ body, html {
         top: 0;
         bottom: 0;
         transform: translateX(-100%);
-        width: 260px;
+        width: 270px;
     }
-    .sidebar.active { transform: translateX(0); box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
+    .sidebar.active { transform: translateX(0); box-shadow: 10px 0 40px rgba(0,0,0,0.5); }
     .main-content { padding: 80px 20px 20px 20px; }
-    .top-bar { flex-direction: column-reverse; gap: 15px; align-items: flex-end; }
+    .top-bar { flex-direction: column-reverse; gap: 15px; }
     .search-box { width: 100%; }
 }

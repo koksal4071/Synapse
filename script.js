@@ -1,7 +1,7 @@
 let currentTab = 'all';
 
-// --- MASTER DATABASE ---
-// Abdullah Köksal'ın 501+ içerikli kütüphanesi
+// --- ABDULLAH KÖKSAL MASTER DATABASE ---
+// Veritabanın 501 içerik barındırıyor
 const synapseDatabase = [
     { id: 1, text: "Britleness", meaning: "Kırılganlık", category: "technical", type: "word" },
     { id: 2, text: "Density", meaning: "Yoğunluk", category: "technical", type: "word" },
@@ -508,7 +508,8 @@ const synapseDatabase = [
 
 document.addEventListener('DOMContentLoaded', () => {
     // Kayıtlı temayı yükle
-    if(localStorage.getItem('synapse-theme') === 'dark') {
+    const savedTheme = localStorage.getItem('synapse-theme');
+    if(savedTheme === 'dark') {
         document.body.classList.add('dark-theme');
         updateThemeButton(true);
     }
@@ -521,7 +522,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateDateTime, 60000);
 });
 
-// --- THEME CONTROL (Dark/Light Mode) ---
+// --- TEMA KONTROLÜ (Dark/Light Mode) ---
 function toggleTheme() {
     document.body.classList.toggle('dark-theme');
     const isDark = document.body.classList.contains('dark-theme');
@@ -538,7 +539,7 @@ function updateThemeButton(isDark) {
     }
 }
 
-// --- SCROLL HANDLING (Back to Top) ---
+// --- KAYDIRMA TAKİBİ (Back to Top) ---
 window.onscroll = function() {
     const btn = document.getElementById("backToTop");
     if (window.scrollY > 300) {
@@ -552,13 +553,13 @@ function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// --- MOBILE SIDEBAR CONTROL ---
+// --- MOBİL YAN PANEL KONTROLÜ ---
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (sidebar) sidebar.classList.toggle('active');
 }
 
-// --- STATISTICS ---
+// --- İSTATİSTİKLER ---
 function updateStats() {
     const total = synapseDatabase.length;
     const techCount = synapseDatabase.filter(i => i.category === 'technical').length;
@@ -573,7 +574,7 @@ function updateStats() {
     if (dailyEl) dailyEl.innerText = `Daily: ${dailyCount}`;
 }
 
-// --- CORE UI FUNCTIONS ---
+// --- ARAYÜZ YÖNETİMİ ---
 function refreshUI() {
     const grid = document.getElementById('contentGrid');
     if (!grid) return;
@@ -606,12 +607,16 @@ function switchTab(tab) {
     const activeBtn = document.getElementById(`btn-${tab}`);
     if (activeBtn) activeBtn.classList.add('active');
     
-    // Mobilde kategori seçince menüyü kapat
-    if(window.innerWidth <= 768) toggleSidebar();
+    // Mobilde seçim yapınca paneli otomatik kapat
+    if(window.innerWidth <= 768) {
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) sidebar.classList.remove('active');
+    }
     
     refreshUI();
 }
 
+// --- ARAMA VE FİLTRELEME ---
 function searchItems() {
     const q = document.getElementById('searchInput').value.toLowerCase();
     document.querySelectorAll('.item-card').forEach(c => {
@@ -619,7 +624,7 @@ function searchItems() {
     });
 }
 
-// --- SIDEBAR EXTRAS ---
+// --- PANEL EKSTRALARI (SAAT & ÖNERİLER) ---
 function updateDateTime() {
     const now = new Date();
     const dateEl = document.getElementById('current-date');

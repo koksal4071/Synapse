@@ -6,73 +6,78 @@
     <title>Synapse | Neural Network for Engineers</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="light-theme">
 
-    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+    <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Toggle Menu">
         <i class="fas fa-bars"></i>
     </button>
 
     <div class="app-container">
         <aside class="sidebar" id="sidebar">
-            <div class="logo">
-                <i class="fas fa-project-diagram"></i>
-                <span>Synapse</span>
-            </div>
-            
-            <nav class="sidebar-nav">
-                <button onclick="switchTab('all')" class="nav-item active" id="btn-all">
-                    <i class="fas fa-network-wired"></i> Global Library
-                </button>
-
-                <div class="nav-group">Technical</div>
-                <button onclick="switchTab('tech-word')" class="nav-item sub-item" id="btn-tech-word">
-                    <i class="fas fa-microchip"></i> Words
-                </button>
-                <button onclick="switchTab('tech-sentence')" class="nav-item sub-item" id="btn-tech-sentence">
-                    <i class="fas fa-code"></i> Sentences
-                </button>
-
-                <div class="nav-group">Daily</div>
-                <button onclick="switchTab('daily-word')" class="nav-item sub-item" id="btn-daily-word">
-                    <i class="fas fa-comment-dots"></i> Words
-                </button>
-                <button onclick="switchTab('daily-sentence')" class="nav-item sub-item" id="btn-daily-sentence">
-                    <i class="fas fa-quote-left"></i> Sentences
-                </button>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="info-card stats-card">
-                    <h4><i class="fas fa-chart-pie"></i> Library Stats</h4>
-                    <p id="stats-total">Total: 501</p>
-                    <div class="stats-mini">
-                        <span id="stats-tech">Tech: 307</span> | <span id="stats-daily">Daily: 193</span>
-                    </div>
-                </div>
-
-                <div class="info-card date-card">
-                    <h4 id="current-date">February 1, 2026</h4>
-                    <p id="current-time">01:20 PM</p>
+            <div class="sidebar-scroll-container">
+                <div class="logo">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>Synapse</span>
                 </div>
                 
-                <div class="info-card fun-card">
-                    <h4><i class="fas fa-headphones"></i> Music of the Day</h4>
-                    <p id="daily-music">Loading...</p>
-                </div>
+                <nav class="sidebar-nav">
+                    <button onclick="switchTab('all')" class="nav-item active" id="btn-all">
+                        <i class="fas fa-network-wired"></i> Global Library
+                    </button>
 
-                <div class="info-card fun-card">
-                    <h4><i class="fas fa-film"></i> Movie Suggestion</h4>
-                    <p id="daily-movie">Loading...</p>
-                </div>
+                    <div class="nav-group">Technical</div>
+                    <button onclick="switchTab('tech-word')" class="nav-item sub-item" id="btn-tech-word">
+                        <i class="fas fa-microchip"></i> Words
+                    </button>
+                    <button onclick="switchTab('tech-sentence')" class="nav-item sub-item" id="btn-tech-sentence">
+                        <i class="fas fa-code"></i> Sentences
+                    </button>
 
-                <div class="last-updated">
-                    <i class="fas fa-history"></i> Last updated: <span id="last-update-date">Feb 01, 2026</span>
-                </div>
+                    <div class="nav-group">Daily</div>
+                    <button onclick="switchTab('daily-word')" class="nav-item sub-item" id="btn-daily-word">
+                        <i class="fas fa-comment-dots"></i> Words
+                    </button>
+                    <button onclick="switchTab('daily-sentence')" class="nav-item sub-item" id="btn-daily-sentence">
+                        <i class="fas fa-quote-left"></i> Sentences
+                    </button>
+                </nav>
 
-                <button id="theme-toggle" onclick="toggleTheme()">
-                    <i class="fas fa-moon"></i> <span>Dark Mode</span>
-                </button>
+                <div class="sidebar-divider"></div>
+
+                <div class="sidebar-extras">
+                    <div class="info-card stats-card">
+                        <h4><i class="fas fa-chart-pie"></i> Library Stats</h4>
+                        <p id="stats-total">Total: 501</p>
+                        <div class="stats-mini">
+                            <span id="stats-tech">Tech: 307</span> | <span id="stats-daily">Daily: 193</span>
+                        </div>
+                    </div>
+
+                    <div class="info-card date-card">
+                        <h4 id="current-date">February 1, 2026</h4>
+                        <p id="current-time">01:28 PM</p>
+                    </div>
+                    
+                    <div class="info-card fun-card">
+                        <h4><i class="fas fa-headphones"></i> Music of the Day</h4>
+                        <p id="daily-music">Loading...</p>
+                    </div>
+
+                    <div class="info-card fun-card">
+                        <h4><i class="fas fa-film"></i> Movie Suggestion</h4>
+                        <p id="daily-movie">Loading...</p>
+                    </div>
+
+                    <div class="last-updated">
+                        <i class="fas fa-history"></i> Last updated: <span id="last-update-date">Feb 01, 2026</span>
+                    </div>
+
+                    <button id="theme-toggle" class="theme-btn" onclick="toggleTheme()">
+                        <i class="fas fa-moon"></i> <span>Dark Mode</span>
+                    </button>
+                </div>
             </div>
         </aside>
 
@@ -80,7 +85,7 @@
             <header class="top-bar">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" onkeyup="searchItems()" placeholder="Search in Synapse network...">
+                    <input type="text" id="searchInput" onkeyup="searchItems()" placeholder="Search in Abdullah's network...">
                 </div>
                 <div class="user-badge">Editor by Abdullah Köksal</div>
             </header>
