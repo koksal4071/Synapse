@@ -35,19 +35,51 @@ body, html {
 }
 
 /* Sidebar Ayarları */
+/* Sidebar ana yapısını güncelle */
 .sidebar {
     width: 280px;
     background: var(--bg-sidebar);
     color: white;
     padding: 25px 20px;
     display: flex;
-    flex-direction: column;
-    /* Masaüstünde sidebar'ın sabit kalmasını sağlar */
+    flex-direction: column; /* İçindekileri dikey sıralar */
     position: sticky;
     top: 0;
-    height: 100vh;
-    overflow-y: auto;
+    height: 100vh; /* Ekran boyuna sabitler */
+    overflow: hidden; /* Dışarı taşmayı engeller */
     transition: transform 0.4s ease;
+}
+
+/* Navigasyon ve orta kısmı kaydırılabilir yap */
+nav {
+    overflow-y: auto;
+    flex-grow: 1; /* Boş alanı doldurur ve alt kısmı aşağı iter */
+    margin-bottom: 20px;
+}
+
+/* Alt kısımdaki widgetlar ve buton için alan */
+.sidebar-extra {
+    margin-top: auto; /* En alta yapıştırır */
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-sidebar); /* Üstüne içerik binmemesi için */
+}
+
+/* Dark Mode Butonu Stili */
+#theme-toggle {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary);
+    color: #0f172a;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
 }
 
 .logo {
