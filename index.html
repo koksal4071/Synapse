@@ -27,7 +27,7 @@
                         <i class="fas fa-network-wired"></i> Global Library
                     </button>
 
-                    <div class="nav-group">Practice & Learning</div>
+                    <div class="nav-group">Learning Center</div>
                     <button onclick="startQuiz()" class="nav-item" id="btn-quiz">
                         <i class="fas fa-graduation-cap"></i> Practice Quiz
                     </button>
@@ -97,14 +97,29 @@
 
             <div id="quizContainer" class="quiz-container" style="display: none;">
                 <div class="quiz-header">
-                    <h3><i class="fas fa-brain"></i> Synapse Practice Quiz</h3>
-                    <span id="quizProgress">Question 1/10</span>
+                    <h3><i class="fas fa-brain"></i> Synapse Smart Practice</h3>
+                    <span id="quizProgress">Select Mode</span>
                 </div>
-                <div class="quiz-card">
-                    <p id="quizQuestion">Loading question...</p>
-                    <div id="quizOptions" class="options-grid">
-                        </div>
+                
+                <div id="quizSelection" class="quiz-selection-view">
+                    <p>Choose your study focus:</p>
+                    <div class="selection-grid">
+                        <button onclick="prepareQuiz('all')" class="select-btn">All Mixed</button>
+                        <button onclick="prepareQuiz('word')" class="select-btn">Words Only</button>
+                        <button onclick="prepareQuiz('sentence')" class="select-btn">Sentences Only</button>
+                        <button onclick="prepareQuiz('mistakes')" class="select-btn error-btn" id="mistakesBtn">
+                            Review Mistakes (<span id="mistakeCount">0</span>)
+                        </button>
+                    </div>
                 </div>
+
+                <div id="quizActiveArea" style="display: none;">
+                    <div class="quiz-card">
+                        <p id="quizQuestion">Loading...</p>
+                        <div id="quizOptions" class="options-grid"></div>
+                    </div>
+                </div>
+
                 <div class="quiz-footer">
                     <button onclick="exitQuiz()" class="exit-btn">
                         <i class="fas fa-sign-out-alt"></i> Exit Quiz

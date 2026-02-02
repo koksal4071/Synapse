@@ -2,8 +2,10 @@ let currentTab = 'all';
 let quizData = [];
 let currentQuestionIndex = 0;
 let score = 0;
+let currentQuizPool = [];
 
-// --- MASTER DATABASE (730 UNIQUE ITEMS) ---
+// --- ABDULLAH KÖKSAL MASTER DATABASE (730 ITEMS) ---
+// Not: Aşağıdaki listeye unique.js içindeki tüm verilerini ekleyebilirsin.
 const synapseDatabase = [
     { id: 1, text: "Britleness", meaning: "Kırılganlık", category: "technical", type: "word" },
     { id: 2, text: "Density", meaning: "Yoğunluk", category: "technical", type: "word" },
@@ -839,31 +841,54 @@ const synapseDatabase = [
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Tema kontrolü
+    // Tema ve Hata Sayısı Yükleme
     if(localStorage.getItem('synapse-theme') === 'dark') {
         document.body.classList.add('dark-theme');
         updateThemeButton(true);
     }
-    
+    updateMistakeCount();
     refreshUI();
     updateDateTime();
     setFunRecommendations();
     setInterval(updateDateTime, 60000);
 });
 
-// --- QUIZ LOGIC (10 Questions Practice) ---
+// --- SMART QUIZ LOGIC ---
+
 function startQuiz() {
-    // Arayüz geçişi
+    // Arayüzü Quiz Moduna Hazırla
     document.getElementById('contentGrid').style.display = 'none';
     document.querySelector('.top-bar').style.display = 'none';
     document.getElementById('quizContainer').style.display = 'block';
-    
-    // Sidebar'daki aktifliği kaldır
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    document.getElementById('btn-quiz').classList.add('active');
+    document.getElementById('quizSelection').style.display = 'block';
+    document.getElementById('quizActiveArea').style.display = 'none';
+    document.getElementById('quizProgress').innerText = "Select Mode";
+    updateMistakeCount();
+}
 
-    // Rastgele 10 soru seç
-    quizData = [...synapseDatabase].sort(() => 0.5 - Math.random()).slice(0, 10);
+function prepareQuiz(mode) {
+    let pool = [];
+    const mistakes = JSON.parse(localStorage.getItem('synapse-mistakes') || '[]');
+
+    if (mode === 'mistakes') {
+        pool = synapseDatabase.filter(item => mistakes.includes(item.id));
+        if (pool.length === 0) {
+            alert("No mistakes recorded yet! Great job!");
+            return;
+        }
+    } else if (mode === 'word' || mode === 'sentence') {
+        pool = synapseDatabase.filter(item => item.type === mode);
+    } else {
+        pool = [...synapseDatabase];
+    }
+
+    // Soruları karıştır ve 10 tane seç (Eğer havuz 10'dan azsa hepsini al)
+    quizData = pool.sort(() => 0.5 - Math.random()).slice(0, 10);
+    currentQuizPool = pool; // Şık üretmek için havuzu sakla
+    
+    document.getElementById('quizSelection').style.display = 'none';
+    document.getElementById('quizActiveArea').style.display = 'block';
+    
     currentQuestionIndex = 0;
     score = 0;
     showQuestion();
@@ -876,14 +901,18 @@ function showQuestion() {
     }
 
     const currentItem = quizData[currentQuestionIndex];
-    document.getElementById('quizProgress').innerText = `Question ${currentQuestionIndex + 1}/10`;
+    document.getElementById('quizProgress').innerText = `Question ${currentQuestionIndex + 1}/${quizData.length}`;
     document.getElementById('quizQuestion').innerText = currentItem.text;
 
-    // Şıkları oluştur (1 doğru, 3 yanlış)
+    // Şık üretme: 1 Doğru + 3 Yanlış (Aynı türden)
+    let sameTypeItems = synapseDatabase.filter(i => i.type === currentItem.type);
     let options = [currentItem.meaning];
-    while (options.length < 4) {
-        let randomMeaning = synapseDatabase[Math.floor(Math.random() * synapseDatabase.length)].meaning;
-        if (!options.includes(randomMeaning)) options.push(randomMeaning);
+    
+    while (options.length < 4 && sameTypeItems.length >= 4) {
+        let randomItem = sameTypeItems[Math.floor(Math.random() * sameTypeItems.length)];
+        if (!options.includes(randomItem.meaning)) {
+            options.push(randomItem.meaning);
+        }
     }
     options.sort(() => 0.5 - Math.random());
 
@@ -893,49 +922,82 @@ function showQuestion() {
         const btn = document.createElement('button');
         btn.className = 'option-btn';
         btn.innerText = opt;
-        btn.onclick = () => checkAnswer(btn, opt, currentItem.meaning);
+        btn.onclick = () => checkAnswer(btn, opt, currentItem);
         optionsGrid.appendChild(btn);
     });
 }
 
-function checkAnswer(btn, selected, correct) {
+function checkAnswer(btn, selected, item) {
     const allButtons = document.querySelectorAll('.option-btn');
     allButtons.forEach(b => b.disabled = true);
 
-    if (selected === correct) {
+    if (selected === item.meaning) {
         btn.classList.add('correct');
         score++;
+        // Eğer hata modundaysak ve doğru bildiysek listeden çıkar
+        handleMistakeRemoval(item.id);
     } else {
         btn.classList.add('wrong');
         allButtons.forEach(b => {
-            if (b.innerText === correct) b.classList.add('correct');
+            if (b.innerText === item.meaning) b.classList.add('correct');
         });
+        // Yanlış bildiğimizde listeye ekle
+        saveMistake(item.id);
     }
 
     setTimeout(() => {
         currentQuestionIndex++;
         showQuestion();
-    }, 1500);
+    }, 1600);
+}
+
+function saveMistake(id) {
+    let mistakes = JSON.parse(localStorage.getItem('synapse-mistakes') || '[]');
+    if (!mistakes.includes(id)) {
+        mistakes.push(id);
+        localStorage.setItem('synapse-mistakes', JSON.stringify(mistakes));
+    }
+    updateMistakeCount();
+}
+
+function handleMistakeRemoval(id) {
+    // Sadece "Hatalar" modunda çözüyorsak ve doğru bildiysek hatayı sileriz
+    let mistakes = JSON.parse(localStorage.getItem('synapse-mistakes') || '[]');
+    const index = mistakes.indexOf(id);
+    if (index > -1) {
+        mistakes.splice(index, 1);
+        localStorage.setItem('synapse-mistakes', JSON.stringify(mistakes));
+    }
+    updateMistakeCount();
+}
+
+function updateMistakeCount() {
+    const mistakes = JSON.parse(localStorage.getItem('synapse-mistakes') || '[]');
+    const countEl = document.getElementById('mistakeCount');
+    if (countEl) countEl.innerText = mistakes.length;
 }
 
 function showQuizResult() {
-    const quizCard = document.querySelector('.quiz-card');
-    quizCard.innerHTML = `
+    const activeArea = document.getElementById('quizActiveArea');
+    activeArea.innerHTML = `
         <div style="text-align:center; padding: 20px;">
-            <i class="fas fa-trophy" style="font-size: 4rem; color: #f1c40f; margin-bottom: 20px;"></i>
-            <h2>Quiz Completed!</h2>
-            <p style="font-size: 1.5rem;">Your Score: <strong>${score} / 10</strong></p>
-            <button onclick="startQuiz()" class="theme-btn" style="margin-top:20px; width:auto; padding: 10px 30px;">Try Again</button>
+            <i class="fas fa-chart-line" style="font-size: 4rem; color: var(--primary); margin-bottom: 20px;"></i>
+            <h2>Practice Done!</h2>
+            <p style="font-size: 1.5rem;">Score: <strong>${score} / ${quizData.length}</strong></p>
+            <div style="margin-top: 25px; display:flex; gap:10px; justify-content:center;">
+                <button onclick="startQuiz()" class="select-btn" style="width:auto;">New Session</button>
+                <button onclick="exitQuiz()" class="exit-btn" style="margin:0;">Main Page</button>
+            </div>
         </div>
     `;
-    document.getElementById('quizProgress').innerText = "Finished";
 }
 
 function exitQuiz() {
-    location.reload(); // En temiz çıkış ve arayüzü sıfırlama yöntemi
+    location.reload(); 
 }
 
-// --- CORE UI FUNCTIONS ---
+// --- CORE UI & SYSTEM FUNCTIONS ---
+
 function refreshUI() {
     const grid = document.getElementById('contentGrid');
     if (!grid) return;
@@ -962,21 +1024,22 @@ function refreshUI() {
 
 function switchTab(tab) {
     currentTab = tab;
-    // Quiz açıksa kapat
     document.getElementById('quizContainer').style.display = 'none';
     document.getElementById('contentGrid').style.display = 'grid';
     document.querySelector('.top-bar').style.display = 'flex';
-
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.getElementById(`btn-${tab}`).classList.add('active');
-    
-    if(window.innerWidth <= 768) {
-        document.getElementById('sidebar').classList.remove('active');
-    }
+    if(window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('active');
     refreshUI();
 }
 
-// --- UTILS ---
+function searchItems() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('.item-card').forEach(c => {
+        c.style.display = c.innerText.toLowerCase().includes(q) ? 'block' : 'none';
+    });
+}
+
 function toggleTheme() {
     document.body.classList.toggle('dark-theme');
     const isDark = document.body.classList.contains('dark-theme');
@@ -987,13 +1050,6 @@ function toggleTheme() {
 function updateThemeButton(isDark) {
     const btn = document.getElementById('theme-toggle');
     if (btn) btn.innerHTML = isDark ? '<i class="fas fa-sun"></i> <span>Light Mode</span>' : '<i class="fas fa-moon"></i> <span>Dark Mode</span>';
-}
-
-function searchItems() {
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    document.querySelectorAll('.item-card').forEach(c => {
-        c.style.display = c.innerText.toLowerCase().includes(q) ? 'block' : 'none';
-    });
 }
 
 function updateStats() {
@@ -1012,7 +1068,7 @@ function updateDateTime() {
 }
 
 function setFunRecommendations() {
-    const musics = [
+  const musics = [
   "Interstellar Main Theme",
   "Hans Zimmer - Time",
   "Hans Zimmer - Cornfield Chase",
